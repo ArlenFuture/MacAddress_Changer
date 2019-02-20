@@ -21,9 +21,9 @@ namespace MacAddress_Changer
             MaterialSkinManager materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-
             // Configure color schema
-            materialSkinManager.ColorScheme = new ColorScheme(
+            materialSkinManager.ColorScheme = new ColorScheme
+            (
                 Primary.Blue400, Primary.Blue500,
                 Primary.Blue500, Accent.LightBlue200,
                 TextShade.WHITE
@@ -42,7 +42,10 @@ namespace MacAddress_Changer
                     {
                         if (MyRegistry.GetValue("DriverDesc").ToString() == mac.GetMACAddress()[i].Description)
                         {
-                            ChooseNetworkInterfaceCard.Items.Add(mac.GetMACAddress()[i].MacAddress);
+                            ChooseNetworkInterfaceCard.Items.Add(mac.GetMACAddress()[i].Name);
+                            string[] data = { mac.GetMACAddress()[i].Name,mac.GetMACAddress()[i].Description, mac.GetMACAddress()[i].MacAddress, mac.GetMACAddress()[i].Ip, mac.GetMACAddress()[i].Netmask };
+                            var item = new ListViewItem(data);
+                            InterInfoListView.Items.Add(item);
                             //MyRegistry.SetValue("NetworkAddress", "002408B2A2D2", RegistryValueKind.String);
                             //MyRegistry.CreateSubKey("NetworkAddress");
                             break;
@@ -51,6 +54,7 @@ namespace MacAddress_Changer
 
                 }
             }
+
         }
     }
 }
