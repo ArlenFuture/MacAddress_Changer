@@ -43,9 +43,10 @@ namespace MacAddress_Changer
                         if (MyRegistry.GetValue("DriverDesc").ToString() == mac.GetMACAddress()[i].Description)
                         {
                             ChooseNetworkInterfaceCard.Items.Add(mac.GetMACAddress()[i].Name);
-                            string[] data = { mac.GetMACAddress()[i].Name,mac.GetMACAddress()[i].Description, mac.GetMACAddress()[i].MacAddress, mac.GetMACAddress()[i].Ip, mac.GetMACAddress()[i].Netmask };
+                            string[] data = { list[J], mac.GetMACAddress()[i].Name, mac.GetMACAddress()[i].Description, mac.GetMACAddress()[i].MacAddress, mac.GetMACAddress()[i].Ip, mac.GetMACAddress()[i].Netmask };
                             var item = new ListViewItem(data);
                             InterInfoListView.Items.Add(item);
+                            MyRegistry.Close();
                             //MyRegistry.SetValue("NetworkAddress", "002408B2A2D2", RegistryValueKind.String);
                             //MyRegistry.CreateSubKey("NetworkAddress");
                             break;
@@ -55,6 +56,39 @@ namespace MacAddress_Changer
                 }
             }
 
+        }
+
+        private void MacAddressChange_Btn_Click(object sender, EventArgs e)
+        {
+            if (ChooseNetworkInterfaceCard.SelectedIndex == -1)
+            {
+                MessageBox.Show("請選擇要更改的網卡");
+            }
+            else
+            {
+                RegistryKey MyRegistry = Registry.LocalMachine.OpenSubKey("SYSTEM").OpenSubKey("CurrentControlSet").OpenSubKey("Control")
+        .OpenSubKey("Class").OpenSubKey("{4D36E972-E325-11CE-BFC1-08002bE10318}").OpenSubKey(InterInfoListView.Items[ChooseNetworkInterfaceCard.SelectedIndex].SubItems[0].Text, true);
+                MyRegistry.SetValue("NetworkAddress", "002408B2A2D2", RegistryValueKind.String);
+                MyRegistry.Close();
+                //MessageBox.Show(InterInfoListView.Items[ChooseNetworkInterfaceCard.SelectedIndex].SubItems[0].Text);
+            }
+            //InterInfoListView.SelectedItems[];
+        }
+
+        private void MacAddressClear_Btn_Click(object sender, EventArgs e)
+        {
+            if (ChooseNetworkInterfaceCard.SelectedIndex == -1)
+            {
+                MessageBox.Show("請選擇要還原的網卡");
+            }
+            else
+            {
+                RegistryKey MyRegistry = Registry.LocalMachine.OpenSubKey("SYSTEM").OpenSubKey("CurrentControlSet").OpenSubKey("Control")
+        .OpenSubKey("Class").OpenSubKey("{4D36E972-E325-11CE-BFC1-08002bE10318}").OpenSubKey(InterInfoListView.Items[ChooseNetworkInterfaceCard.SelectedIndex].SubItems[0].Text, true);
+                MyRegistry.DeleteValue("NetworkAddress");
+                MyRegistry.Close();
+                //MessageBox.Show(InterInfoListView.Items[ChooseNetworkInterfaceCard.SelectedIndex].SubItems[0].Text);
+            }
         }
     }
 }
